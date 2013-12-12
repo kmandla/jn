@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# journal 0.3
+# Copyright 2010 Ben Winston (winsbe01@gmail.com)
+# A simple command-line journal tool.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>
+
+journal=~/.journal/journal
+
+if [ $# -eq 0 ] || [ "$1" = "-u" ]; then
+	clear
+	echo -e "You will now be taken into $JNEDITOR, where you may compose your journal entry.\n\n"
+	read -p "Press enter to continue..."
+	tmpfile=/tmp/$(date +%s)
+	touch $tmpfile
+	$JNEDITOR $tmpfile
+	touch ~/.journal/journal
+	echo -e "$(date +%A) $(date +%B) $(date +%d), $(date +%Y) at $(date +%r):\n" >> $journal
+	cat $tmpfile >> $journal
+	echo -e "\n~~~~~\n" >> $journal
+	rm $tmpfile
+	echo "thanks for the update!"
+
+elif [ "$1" = "-h" ]; then
+	echo "jn 0.3"
+	echo -e "by Ben Winston\n"
+	echo -e "command: jn [options]\n"
+	echo "  -b => browse the journal"
+	echo "  -h => brings you to this help screen"
+	echo "  -u => update journal (same as no arguments)"
+
+elif [ "$1" = "-b" ]; then
+	if [ $# -ne 1 ]; then
+		echo "command: jn -b"
+	else
+		cat $journal | less
+	fi
+
+else
+	echo "That's not (currently) and option!"
+	echo "Type jn -h for the help screen."
+fi
