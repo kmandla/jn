@@ -27,7 +27,7 @@ if [ $# -eq 0 ] || [ "$1" = "-u" ]; then
 	touch $tmpfile
 	$JNEDITOR $tmpfile
 	touch ~/.journal/journal
-	echo -e "$(date +%A) $(date +%B) $(date +%d), $(date +%Y) at $(date +%r):\n" >> $journal
+	echo -e "$(date +'%A %B %d, %Y at %r'):\n" >> $journal
 	cat $tmpfile >> $journal
 	echo -e "\n~~~~~\n" >> $journal
 	rm $tmpfile
